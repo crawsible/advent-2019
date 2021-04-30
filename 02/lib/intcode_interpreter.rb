@@ -1,12 +1,12 @@
 class IntcodeInterpreter
   def initialize(program)
-    @program = program
+    @program = program.dup
   end
 
   def execute
-    offset = 0
-    until offset >= program.length
-      opcode, input1, input2, output = program[offset...offset+4]
+    pointer = 0
+    until pointer >= program.length
+      opcode, input1, input2, output = program[pointer...pointer+4]
 
       case opcode
       when 99
@@ -17,7 +17,7 @@ class IntcodeInterpreter
         program[output] = program[input1] * program[input2]
       end
 
-      offset += 4
+      pointer += 4
     end
 
     program

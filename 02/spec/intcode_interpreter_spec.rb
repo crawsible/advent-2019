@@ -1,6 +1,16 @@
 require 'intcode_interpreter'
 
 RSpec.describe IntcodeInterpreter do
+  describe '.new' do
+    it 'copies the provided program' do
+      program = [99]
+      interpreter = IntcodeInterpreter.new(program)
+
+      interpreter_program = interpreter.send(:program)
+      expect(interpreter_program.object_id).not_to eq(program.object_id)
+    end
+  end
+
   describe '#execute' do
     context 'with a 99 opcode' do
       it 'returns the program unchanged' do
