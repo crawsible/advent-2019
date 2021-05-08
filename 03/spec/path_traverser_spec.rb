@@ -32,14 +32,14 @@ RSpec.describe PathTraverser do
     end
 
     context 'with a multistep path' do
-      it 'creates segments beginning at the origin' do
+      it 'creates segments beginning at the origin with accumulated distance offset' do
         traverser = PathTraverser.new('R5,D4,L3,U2')
         traverser.traverse
         expect(traverser.segments).to eq([
-          Segment.new(fromX: 0, fromY:  0, toX: 5, toY:  0),
-          Segment.new(fromX: 5, fromY:  0, toX: 5, toY: -4),
-          Segment.new(fromX: 5, fromY: -4, toX: 2, toY: -4),
-          Segment.new(fromX: 2, fromY: -4, toX: 2, toY: -2),
+          Segment.new(fromX: 0, fromY:  0, toX: 5, toY:  0, distance_offset: 0),
+          Segment.new(fromX: 5, fromY:  0, toX: 5, toY: -4, distance_offset: 5),
+          Segment.new(fromX: 5, fromY: -4, toX: 2, toY: -4, distance_offset: 9),
+          Segment.new(fromX: 2, fromY: -4, toX: 2, toY: -2, distance_offset: 12),
         ])
       end
     end

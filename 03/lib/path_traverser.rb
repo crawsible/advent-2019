@@ -8,6 +8,7 @@ class PathTraverser
 
   def traverse
     fromX, fromY = 0, 0
+    distance_offset = 0
 
     until steps.empty? do
       direction, distance = next_step
@@ -23,8 +24,16 @@ class PathTraverser
         toX, toY = fromX, fromY + distance
       end
 
-      segments << Segment.new(fromX: fromX, fromY: fromY, toX: toX, toY: toY)
+      segments << Segment.new(
+        fromX: fromX,
+        fromY: fromY,
+        toX: toX,
+        toY: toY,
+        distance_offset: distance_offset
+      )
+
       fromX, fromY = toX, toY
+      distance_offset += distance
     end
   end
 

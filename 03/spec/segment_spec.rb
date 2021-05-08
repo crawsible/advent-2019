@@ -39,4 +39,25 @@ RSpec.describe Segment do
       end
     end
   end
+
+  describe '#distance_from_origin' do
+    context 'with no offset' do
+      it 'returns the distance from the "from" coordinates' do
+        segment = Segment.new(fromX: 0, fromY: 0, toX: 5, toY: 0)
+        expect(segment.distance_from_origin([2, 0])).to eq(2)
+      end
+
+      it 'returns an absolute value' do
+        segment = Segment.new(fromX: 0, fromY: 0, toX: -5, toY: 0)
+        expect(segment.distance_from_origin([-2, 0])).to eq(2)
+      end
+    end
+
+    context 'with an offset' do
+      it 'returns the distance plus the offset' do
+        segment = Segment.new(fromX: 0, fromY: 0, toX: -5, toY: 0, distance_offset: 5)
+        expect(segment.distance_from_origin([-2, 0])).to eq(7)
+      end
+    end
+  end
 end

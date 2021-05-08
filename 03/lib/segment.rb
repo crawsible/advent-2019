@@ -1,8 +1,8 @@
 class Segment
-  attr_reader :fromX, :fromY, :toX, :toY
+  attr_reader :fromX, :fromY, :toX, :toY, :distance_offset
 
-  def initialize(fromX:, fromY:, toX:, toY:)
-    @fromX, @fromY, @toX, @toY = fromX, fromY, toX, toY
+  def initialize(fromX:, fromY:, toX:, toY:, distance_offset: 0)
+    @fromX, @fromY, @toX, @toY, @distance_offset = fromX, fromY, toX, toY, distance_offset
   end
 
   def intersection(other)
@@ -14,6 +14,15 @@ class Segment
     return nil unless vertical.y_range.cover?(horizontal.y_range.first)
 
     [vertical.x_range.first, horizontal.y_range.first]
+  end
+
+  def distance_from_origin(coords)
+    case orientation
+    when :horizontal
+      (coords.first - fromX).abs + distance_offset
+    when :vertical
+      (coords.last - fromY).abs + distance_offset
+    end
   end
 
   def ==(other)
