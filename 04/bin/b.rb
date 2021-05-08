@@ -8,4 +8,4 @@ input = File.read(File.expand_path(File.join("..", "data", "input.txt"), __dir__
 first, last = input.match(/(\d+)-(\d+)/).captures.map(&:to_i)
 counter = ViablePasswordCounter.new((first..last))
 
-puts counter.a_count
+puts counter.count
