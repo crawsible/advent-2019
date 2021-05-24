@@ -53,6 +53,13 @@ RSpec.describe IntcodeInterpreter do
       end
     end
 
+    context 'with nonzero parameter modes' do
+      it 'treats the corresponding parameter as a value and not an address' do
+        interpreter = IntcodeInterpreter.new([1101, 0, 0, 0])
+        expect(interpreter.execute).to    eq([0,    0, 0, 0])
+      end
+    end
+
     context 'with a multi-opcode program' do
       it 'executes them in sequence' do
         interpreter = IntcodeInterpreter.new([1, 0, 0, 1, 2, 4, 5, 5])
