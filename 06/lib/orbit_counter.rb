@@ -1,31 +1,52 @@
 class OrbitCounter
   def initialize(orbit_data)
+    @satellite_orbits = {}
     process_orbits(orbit_data)
   end
 
   def count
-    orbits.count
+    @satellite_orbits.keys.map do |satellite|
+      get_all_orbits(satellite)
+    end.flatten.count
+  end
+
+  def transfer_count(source, destination)
+    source_orbits = get_all_orbits(source)
+    destination_orbits = get_all_orbits(destination)
+
+    source_stationaries = source_orbits.map(&:stationary)
+    destination_stationaries = destination_orbits.map(&:stationary)
+    shared_stationary = (source_stationaries & destination_stationaries).first
+
+    source_distance = source_orbits.find do |orbit|
+      orbit.stationary == shared_stationary
+    end.distance
+    destination_distance = destination_orbits.find do |orbit|
+      orbit.stationary == shared_stationary
+    end.distance
+
+    source_distance + destination_distance - 2
   end
 
   private
-  def process_orbits(orbit_data)
-    @stationary_satellites = Hash.new([])
+  Orbit = Struct.new(:stationary, :satellite, :distance)
 
-    orbit_data.each do |orbit|
-      stationary, satellite = orbit.match(/\A(.*)\)(.*)\z/).captures
-      @stationary_satellites[stationary] += [satellite]
+  def process_orbits(orbit_data)
+    orbit_data.each do |raw_orbit|
+      stationary, satellite = raw_orbit.match(/\A(.*)\)(.*)\z/).captures
+
+      orbit = Orbit.new(stationary, satellite, 1)
+      @satellite_orbits[satellite] = orbit
     end
   end
 
-  def orbits
-    @stationary_satellites.keys.map do |stationary|
-      find_satellites(stationary).map { |satellite| "#{stationary})#{satellite}" }
-    end.flatten
-  end
+  def get_all_orbits(satellite)
+    orbits = [@satellite_orbits[satellite]]
+    orbits.each do |orbit|
+      linked_orbit = @satellite_orbits[orbit.stationary]
+      next if linked_orbit.nil?
 
-  def find_satellites(stationary)
-    @stationary_satellites[stationary].map do |satellite|
-      [satellite] + find_satellites(satellite)
-    end.flatten
+      orbits << Orbit.new(linked_orbit.stationary, satellite, orbit.distance + 1)
+    end
   end
 end

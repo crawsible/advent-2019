@@ -20,4 +20,25 @@ RSpec.describe OrbitCounter do
       end
     end
   end
+
+  describe '#transfer_count' do
+    # COM - A - B - C
+    #        \
+    #         D - E - F
+    let(:counter) { OrbitCounter.new(["COM)A", "A)B", "B)C", "A)D", "D)E", "E)F"]) }
+
+    context 'with two satellites directly orbiting the same station' do
+      it 'returns zero' do
+        transfer_count = counter.transfer_count("B", "D")
+        expect(transfer_count).to be(0)
+      end
+    end
+
+    context 'with satellites orbiting separate stationaries' do
+      it 'returns the shortest number of transfers between the two stationaries' do
+        transfer_count = counter.transfer_count("C", "F")
+        expect(transfer_count).to be(3)
+      end
+    end
+  end
 end
