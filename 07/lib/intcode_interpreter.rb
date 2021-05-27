@@ -3,7 +3,7 @@ require 'stringio'
 class IntcodeInterpreter
   attr_accessor :input, :output
 
-  def initialize(program, input=StringIO.new, output=StringIO.new)
+  def initialize(program, input=Queue.new, output=Queue.new)
     @initial_program = program.dup
 
     @input = input
@@ -80,7 +80,7 @@ class IntcodeInterpreter
 
   def input_to_destination(pointer)
     destination = program[pointer]
-    program[destination] = input.gets.chomp.to_i
+    program[destination] = input.deq
     pointer + 1
   end
 
@@ -88,7 +88,7 @@ class IntcodeInterpreter
     source_param = program[pointer]
     source = param_modes.first == 0 ? program[source_param] : source_param
 
-    output.puts(source)
+    output.enq(source)
     pointer + 1
   end
 

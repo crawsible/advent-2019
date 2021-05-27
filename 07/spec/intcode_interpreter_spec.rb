@@ -45,21 +45,20 @@ RSpec.describe IntcodeInterpreter do
       end
 
       context 'with opcode 3 (input to destination)' do
-        it 'reads from a provided input and writes it to the referenced index' do
-          input = StringIO.new("777\n")
-          interpreter = IntcodeInterpreter.new([3, 0], input)
-
+        it 'reads from its input queue and writes it to the referenced index' do
+          interpreter = IntcodeInterpreter.new([3,   0])
+          interpreter.input.enq(777)
           expect(interpreter.execute).to    eq([777, 0])
         end
       end
 
       context 'with opcode 4 (source to output)' do
         it 'reads from a refenced index and writes it to output' do
-          output = StringIO.new
-          interpreter = IntcodeInterpreter.new([4, 0], nil, output)
+          interpreter = IntcodeInterpreter.new([4, 0])
           interpreter.execute
 
-          expect(output.string).to eq("4\n")
+          expect(interpreter.output.deq).to eq(4)
+          expect(interpreter.output.length).to eq(0)
         end
       end
 
@@ -140,11 +139,10 @@ RSpec.describe IntcodeInterpreter do
       end
 
       it 'treats the corresponding parameter as a value and not an address for opcode 4 (source to output)' do
-        output = StringIO.new
-        interpreter = IntcodeInterpreter.new([104, 3, 99, 777], nil, output)
+        interpreter = IntcodeInterpreter.new([104, 3, 99, 777])
         interpreter.execute
 
-        expect(output.string).to eq("3\n")
+        expect(interpreter.output.deq).to eq(3)
       end
 
       it 'treats the corresponding parameter as a value and not an address for opcode 5 (jump if true)' do

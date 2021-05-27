@@ -11,6 +11,6 @@ program = input.split(',').map(&:to_i)
 
 amplifiers = 5.times.map { IntcodeInterpreter.new(program) }
 series = AmplificationSeries.new(amplifiers)
-maximizer = SignalMaximizer.new(series, [0, 1, 2, 3, 4])
+maximizer = SignalMaximizer.new(series, [5, 6, 7, 8, 9])
 
 puts maximizer.get_maximum
