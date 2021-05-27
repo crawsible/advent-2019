@@ -1,3 +1,5 @@
+require 'stringio'
+
 class IntcodeInterpreter
   attr_accessor :input, :output
 

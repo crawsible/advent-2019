@@ -13,37 +13,34 @@ RSpec.describe Amplifier do
 
     describe '#amplify' do
       it "writes phase and input signal to its input" do
-        amplifier = Amplifier.new(interpreter, 3)
-        amplifier.amplify(7)
+        amplifier = Amplifier.new(interpreter)
+        expect(input).to receive(:puts).with(3).ordered
+        expect(input).to receive(:puts).with(7).ordered
 
-        expect(input.string).to eq("3\n7\n")
+        amplifier.amplify(3, 7)
       end
 
       it "executes the interpreter" do
-        amplifier = Amplifier.new(interpreter, 3)
+        amplifier = Amplifier.new(interpreter)
 
         expect(interpreter).to receive(:execute)
-        amplifier.amplify(7)
+        amplifier.amplify(3, 7)
       end
 
       it "reads from the interpreter's output and and returns the value" do
         output.puts "42"
-        amplifier = Amplifier.new(interpreter, 0)
-        expect(amplifier.amplify(0)).to be(42)
+        amplifier = Amplifier.new(interpreter)
+        expect(amplifier.amplify(0, 0)).to be(42)
       end
-    end
 
-    describe '#reset' do
       it "truncates and rewinds the interpreter's input and output" do
-        amplifier = Amplifier.new(interpreter, 0)
+        amplifier = Amplifier.new(interpreter)
+        amplifier.amplify(0, 0)
 
-        expect(input).to receive(:truncate).with(0)
-        expect(input).to receive(:rewind)
-
-        expect(output).to receive(:truncate).with(0)
-        expect(output).to receive(:rewind)
-
-        amplifier.reset
+        expect(input.string).to be_empty
+        expect(output.string).to be_empty
+        expect(input.pos).to be(0)
+        expect(output.pos).to be(0)
       end
     end
   end

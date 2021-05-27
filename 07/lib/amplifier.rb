@@ -1,26 +1,30 @@
 class Amplifier
-  attr_accessor :phase
 
-  def initialize(interpreter, phase)
-    @interpreter, @phase = interpreter, phase
+  def initialize(interpreter)
+    @interpreter = interpreter
   end
 
-  def amplify(input_signal)
+  def amplify(phase, input_signal)
     interpreter.input.puts(phase)
     interpreter.input.puts(input_signal)
     interpreter.input.rewind
 
     interpreter.execute
-    interpreter.output.string.chomp.to_i
-  end
+    signal = interpreter.output.string.chomp.to_i
 
-  def reset
-    interpreter.input.truncate(0)
-    interpreter.input.rewind
-    interpreter.output.truncate(0)
-    interpreter.output.rewind
+    reset_io
+    signal
   end
 
   private
   attr_reader :interpreter
+
+  def reset_io
+    interpreter.input.truncate(0)
+    interpreter.input.rewind
+
+    interpreter.output.truncate(0)
+    interpreter.output.rewind
+  end
+
 end

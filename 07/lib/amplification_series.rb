@@ -3,9 +3,9 @@ class AmplificationSeries
     @amplifiers = amplifiers
   end
 
-  def amplify
-    amplifiers.reduce(0) do |signal, amplifier|
-      amplifier.amplify(signal)
+  def amplify(phases)
+    amplifiers.each.with_index.reduce(0) do |signal, (amplifier, i)|
+      amplifier.amplify(phases[i], signal)
     end
   end
 
